@@ -1,4 +1,4 @@
-const API = "AIzaSyAw_-2LJag0L6a89uDE7dyMxr_CX3mnxt8";
+const API = "";
 
 const authenticate = async (mode, email, password) => {
   const url = `https://identitytoolkit.googleapis.com/v1/accounts:${mode}?key=${API}`;

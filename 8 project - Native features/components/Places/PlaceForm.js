@@ -1,25 +1,40 @@
-import { useState } from "react";
-import { Text, View, ScrollView, TextInput, StyleSheet } from "react-native";
+import { useState, useCallback } from "react";
+import { ScrollView, StyleSheet } from "react-native";
 
-import { Colors } from "../../constants/colors";
+import Button from "../UI/Button";
+import TitlePicker from "./TitlePicker";
+import ImagePicker from "./ImagePicker";
+import LocationPicker from "./LocationPicker";
+import { Place } from "../../models/place";
 
-const PlaceForm = () => {
+const PlaceForm = ({onCreatePlace}) => {
   const [title, setTitle] = useState("");
+  const [location, setLocation] = useState();
+  const [image, setImage] = useState();
 
   const changeTitleHandler = (enteredText) => {
     setTitle(enteredText);
   };
 
+  const imageTakenHandler = (imageUri) => {
+    setImage(imageUri);
+  };
+
+  const locationPickHandler = useCallback((pickedLocation) => {
+    setLocation(pickedLocation);
+  }, []);
+
+  const savePlaceHandler = () => {
+    const placeData = new Place(title, image, location);
+    onCreatePlace(placeData);
+  };
+
   return (
     <ScrollView style={styles.form}>
-      <View>
-        <Text style={styles.label}>Title</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={changeTitleHandler}
-          value={title}
-        />
-      </View>
+      <TitlePicker onChangeTitle={changeTitleHandler} title={title} />
+      <ImagePicker onImageTaken={imageTakenHandler} />
+      <LocationPicker onLocationPick={locationPickHandler} />
+      <Button onPress={savePlaceHandler}>Add Place</Button>
     </ScrollView>
   );
 };
@@ -29,19 +44,5 @@ const styles = StyleSheet.create({
   form: {
     flex: 1,
     padding: 24,
-  },
-  label: {
-    fontWeight: "bold",
-    marginBottom: 4,
-    color: Colors.primary500,
-  },
-  input: {
-    marginVertical: 8,
-    paddingHorizontal: 4,
-    paddingVertical: 8,
-    fontSize: 16,
-    borderBottomColor: Colors.primary700,
-    borderBottomWidth: 2,
-    backgroundColor: Colors.primary100,
   },
 });
